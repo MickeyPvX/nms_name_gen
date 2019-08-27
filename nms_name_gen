@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+
+import click
+from utils.star_class_map import spectral_class_map, oddity_map
+
+
+@click.command()
+@click.argument('spectral_class')
+def main(spectral_class):
+    chopped_string = list(spectral_class)
+
+    spectral_class = chopped_string[0]
+    brightness = int(chopped_string[1]) // 2
+    oddities = []
+
+    if len(chopped_string) > 2:
+        oddities = [oddity_map[oddity.upper()] for oddity in chopped_string[2:]]
+
+    print(spectral_class_map[spectral_class][brightness], oddities)
+
+
+if __name__ == '__main__':
+    main()
