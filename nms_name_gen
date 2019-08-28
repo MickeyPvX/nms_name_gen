@@ -1,12 +1,29 @@
 #!/usr/bin/env python
 
 import click
+
+from googletrans import Translator
 from utils.star_class_map import spectral_class_map, oddity_map
+
+
+@click.group()
+def main():
+    """
+    It's a start!
+    """
+
+
+@click.command()
+@click.argument('word')
+def translate(word):
+    trans = Translator()
+    icelandic = trans.translate(word, dest='is').text
+    click.echo(f'{word} -> {icelandic}')
 
 
 @click.command()
 @click.argument('spectral_class')
-def main(spectral_class):
+def name_star(spectral_class):
     chopped_string = list(spectral_class)
 
     spectral_class = chopped_string[0]
@@ -16,8 +33,10 @@ def main(spectral_class):
     if len(chopped_string) > 2:
         oddities = [oddity_map[oddity.upper()] for oddity in chopped_string[2:]]
 
-    click.echo(spectral_class_map[spectral_class][brightness], oddities)
+    click.echo([spectral_class_map[spectral_class][brightness], oddities])
 
 
 if __name__ == '__main__':
+    main.add_command(translate)
+    main.add_command(name_star)
     main()
