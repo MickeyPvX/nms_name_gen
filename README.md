@@ -1,5 +1,7 @@
 # No Man's Sky Name Generator
 
+***WORK IN PROGRESS***
+
 ## Overview
 
 * This naming generator for No Man's Sky adhere's to Odin's naming convention for stars and planets:

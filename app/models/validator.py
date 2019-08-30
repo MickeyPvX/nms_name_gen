@@ -28,9 +28,9 @@ class Validator(object):
             type_list.extend([valid.__name__ for valid in iter(self.valid_type)])
         except TypeError:
             type_list.append(self.valid_type.__name__)
-        
+
         return type_list
-    
+
     def _tuplator(self, value):
         value_cls = value.__class__
         tuple_map = {

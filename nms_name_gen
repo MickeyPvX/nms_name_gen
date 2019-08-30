@@ -4,6 +4,7 @@ import click
 
 from googletrans import Translator
 from utils.star_class_map import spectral_class_map, oddity_map
+from utils.portmanfaux import PortManFaux
 
 
 @click.group()
@@ -36,7 +37,17 @@ def name_star(spectral_class):
     click.echo([spectral_class_map[spectral_class][brightness], oddities])
 
 
+@click.command()
+@click.option('--num-words', '-n', help='Number of words to generate')
+@click.argument('input_words')
+def portmanfaux(num_words, input_words):
+    click.echo(input_words)
+    word_gen = PortManFaux(input_words=input_words)
+    click.echo(word_gen.get_prospects(number=int(num_words)))
+
+
 if __name__ == '__main__':
     main.add_command(translate)
     main.add_command(name_star)
+    main.add_command(portmanfaux)
     main()
