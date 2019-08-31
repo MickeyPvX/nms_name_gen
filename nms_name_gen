@@ -38,12 +38,24 @@ def name_star(spectral_class):
 
 
 @click.command()
-@click.option('--num-words', '-n', help='Number of words to generate')
+@click.option('--min-len', '-m', help='Minimum length of words to generate', type=int)
+@click.option('--number', '-n', help='Number of words to generate', type=int)
 @click.argument('input_words')
-def portmanfaux(num_words, input_words):
-    click.echo(input_words)
-    word_gen = PortManFaux(input_words=input_words)
-    click.echo(word_gen.get_prospects(number=int(num_words)))
+def portmanfaux(**kwargs):
+    word_list = kwargs.pop('input_words').split(',')
+
+    click.echo(f'Words used: {word_list}')
+
+    prospect_args = {
+        key: value
+        for key, value in kwargs.items()
+        if value is not None
+    }
+
+    word_gen = PortManFaux(input_words=word_list)
+    prospects = word_gen.get_prospects(**prospect_args)
+
+    click.echo(prospects)
 
 
 if __name__ == '__main__':

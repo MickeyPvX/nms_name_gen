@@ -31,7 +31,7 @@ class PortManFaux(object):
                     self.faux_list.append(f'{w2[:-y]}{w1[x:]}')
 
     def get_prospects(self, number=10, min_len=4):
-        filtered_list = [prospect for prospect in self.faux_list if len(prospect) >= min_len]
+        filtered_list = [prospect.title() for prospect in self.faux_list if len(prospect) >= min_len]
         num_possible = len(filtered_list)
 
         if num_possible == 0:
