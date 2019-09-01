@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import click
 
 from googletrans import Translator
@@ -17,24 +15,17 @@ def main():
 @click.command()
 @click.argument('word')
 def translate(word):
+    """
+    This command translates an English input word to Icelandic and outputs it to the console
+
+    :param word (str): input word in English
+    :return:
+    """
     trans = Translator()
     icelandic = trans.translate(word, dest='is').text
     click.echo(f'{word} -> {icelandic}')
 
-
-@click.command()
-@click.argument('spectral_class')
-def name_star(spectral_class):
-    chopped_string = list(spectral_class)
-
-    spectral_class = chopped_string[0]
-    brightness = int(chopped_string[1]) // 2
-    oddities = []
-
-    if len(chopped_string) > 2:
-        oddities = [oddity_map[oddity.upper()] for oddity in chopped_string[2:]]
-
-    click.echo([spectral_class_map[spectral_class][brightness], oddities])
+    return
 
 
 @click.command()
@@ -42,6 +33,14 @@ def name_star(spectral_class):
 @click.option('--number', '-n', help='Number of words to generate', type=int)
 @click.argument('input_words')
 def portmanfaux(**kwargs):
+    """
+    Generates a list of portman-faux words from input words and outputs them to the console
+
+    :param min_len (int): minimum length of the words to return
+    :param number (int): number of words to generate
+    :param input_words (str): words to use separated by commas
+    :return:
+    """
     word_list = kwargs.pop('input_words').split(',')
 
     click.echo(f'Words used: {word_list}')
@@ -55,11 +54,13 @@ def portmanfaux(**kwargs):
     word_gen = PortManFaux(input_words=word_list)
     prospects = word_gen.get_prospects(**prospect_args)
 
-    click.echo(prospects)
+    for prospect in prospects:
+        click.echo(prospect)
+
+    return
 
 
-if __name__ == '__main__':
+def entrypoint():
     main.add_command(translate)
-    main.add_command(name_star)
     main.add_command(portmanfaux)
     main()

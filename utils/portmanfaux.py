@@ -4,6 +4,13 @@ from random import randint
 
 
 class PortManFaux(object):
+    """
+    As opposed to a true portmanteau where the sound and meaning of two words are blended, this
+    portman-faux programmatically generates combinations of two inputs with no real logic as to
+    their combined meaning.  Oh well.
+
+    :param input_words (list): the words to smash together
+    """
 
     input_words = TypedList(str)
     prospects = TypeValidator(set)
@@ -18,6 +25,9 @@ class PortManFaux(object):
             self._gen_faux()
 
     def _gen_faux(self):
+        """
+        Generates all possible word combinations
+        """
         if len(self.input_words) != 2:
             # Currently only working on 2 words at a time
             raise ValueError(f'input_words: {self.input_words} is not a list with len() == 2')
@@ -31,6 +41,13 @@ class PortManFaux(object):
                     self.faux_list.append(f'{w2[:-y]}{w1[x:]}')
 
     def get_prospects(self, number=10, min_len=4):
+        """
+        Selects n portman-faux words at random
+
+        :param number (int): number of words to select
+        :param min_len (int): minimum length of the words to select
+        :return (set):
+        """
         filtered_list = [prospect.title() for prospect in self.faux_list if len(prospect) >= min_len]
         num_possible = len(filtered_list)
 
