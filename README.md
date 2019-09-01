@@ -15,4 +15,5 @@
 ## Installation
 
 nms_name_gen uses the Click package with setuptools integration to generate a command line interface:
+
 * [Click with setuptools](https://click.palletsprojects.com/en/7.x/setuptools/)
