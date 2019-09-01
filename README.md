@@ -5,7 +5,7 @@
 ## Overview
 
 * This naming generator for No Man's Sky adhere's to Odin's naming convention for stars and planets:
-  * [https://www.odingaming.com/2018/01/15/no-mans-sky-naming-convention](OdinGaming Naming Convention)
+  * [OdinGaming Naming Convention](https://www.odingaming.com/2018/01/15/no-mans-sky-naming-convention)
 
 * [x] Basic maps for star classes and oddities
 * [x] Portmanfaux generator
@@ -15,4 +15,4 @@
 ## Installation
 
 nms_name_gen uses the Click package with setuptools integration to generate a command line interface:
-* [https://click.palletsprojects.com/en/7.x/setuptools/](Click with setuptools)
+* [Click with setuptools](https://click.palletsprojects.com/en/7.x/setuptools/)
