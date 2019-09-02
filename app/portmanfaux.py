@@ -1,5 +1,5 @@
-from app.models.type_validator import TypeValidator
-from app.models.typed_list import TypedList
+from .models.type_validator import TypeValidator
+from .models.typed_list import TypedList
 from random import randint
 
 
