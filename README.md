@@ -9,8 +9,9 @@
 
 * [x] Basic maps for star classes and oddities
 * [x] Portmanfaux generator
-* [ ] Build command line functions
-* [ ] Translations to Icelandic
+* [x] Basic word translation to Icelandic
+* [x] Star naming
+* [ ] Planet naming
 
 ## Installation
 

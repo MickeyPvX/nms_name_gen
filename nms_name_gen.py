@@ -2,7 +2,8 @@ import click
 
 from googletrans import Translator
 from utils.star_class_map import spectral_class_map, oddity_map
-from utils.portmanfaux import PortManFaux
+from app.portmanfaux import PortManFaux
+from app.models.star_class import StarClass
 
 
 @click.group()
@@ -60,7 +61,36 @@ def portmanfaux(**kwargs):
     return
 
 
+@click.command()
+@click.option('--min-len', '-m', help='Minimum length of names to generate', type=int)
+@click.option('--number', '-n', help='Number of names to generate', type=int)
+@click.argument('spectral_class')
+@click.argument('region')
+def name_star(**kwargs):
+    """
+    Based on an input spectral class and region, generates prospective star names and outputs them to the console
+
+    :param spectral_class (str): the NMS spectral class e.g. "F0", "B3ef", "O9v", etc.
+    :param region (str): the NMS region where the star resides
+    :param number (int): number of prospective star names to generate
+    :param min_len (int): minimun length of the star names to generate
+    :return:
+    """
+    spectral_class = kwargs.pop('spectral_class')
+
+    star_name_gen = StarClass(spectral_class)
+    star_prospects = star_name_gen.generate_names(**kwargs)
+
+    click.echo(f'Star Class: {star_name_gen.spectral_class_str}\nRegion: {kwargs["region"].title()}\n')
+
+    for prospect in star_prospects:
+        click.echo(prospect)
+
+    return
+
+
 def entrypoint():
     main.add_command(translate)
     main.add_command(portmanfaux)
+    main.add_command(name_star)
     main()
