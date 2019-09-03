@@ -77,9 +77,10 @@ def name_star(**kwargs):
     :return:
     """
     spectral_class = kwargs.pop('spectral_class')
+    name_args = {key: value for key, value in kwargs.items() if value is not None}
 
     star_name_gen = StarClass(spectral_class)
-    star_prospects = star_name_gen.generate_names(**kwargs)
+    star_prospects = star_name_gen.generate_names(**name_args)
 
     click.echo(f'Star Class: {star_name_gen.spectral_class_str}\nRegion: {kwargs["region"].title()}\n')
 
