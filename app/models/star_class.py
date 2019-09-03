@@ -12,8 +12,8 @@ class StarClass(object):
     oddities = TypedList(str)
 
     def __init__(self, spectral_class):
-        self.spectral_class_str = spectral_class
-        self.spectral_class = self.spectral_class_str[0].upper()
+        self.spectral_class_str = spectral_class.upper()
+        self.spectral_class = self.spectral_class_str[0]
         self.oddities = []
 
         if 2 > len(self.spectral_class_str) > 4:
@@ -38,4 +38,7 @@ class StarClass(object):
 
         name_gen = PortManFaux(input_words=[deity_name, region])
 
-        return {f'{prefix}{name}{suffix}' for name in name_gen.get_prospects()}
+        return {
+            f'{prefix}{name}{suffix}'
+            for name in name_gen.get_prospects(number=number, min_len=min_len)
+        }
