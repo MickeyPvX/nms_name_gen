@@ -3,7 +3,7 @@ import click
 from googletrans import Translator
 from utils.star_class_map import spectral_class_map, oddity_map
 from app.portmanfaux import PortManFaux
-from app.models.star_class import StarClass
+from app.star_class import StarClass
 
 
 @click.group()
@@ -46,11 +46,7 @@ def portmanfaux(**kwargs):
 
     click.echo(f'Words used: {word_list}')
 
-    prospect_args = {
-        key: value
-        for key, value in kwargs.items()
-        if value is not None
-    }
+    prospect_args = {key: value for key, value in kwargs.items() if value is not None}
 
     word_gen = PortManFaux(input_words=word_list)
     prospects = word_gen.get_prospects(**prospect_args)
@@ -82,7 +78,13 @@ def name_star(**kwargs):
     star_name_gen = StarClass(spectral_class)
     star_prospects = star_name_gen.generate_names(**name_args)
 
-    click.echo(f'Star Class: {star_name_gen.spectral_class_str}\nRegion: {kwargs["region"].title()}\n')
+    click.echo(
+        (
+            f'\nStar Class: {star_name_gen.spectral_class_str}\n'
+            f'Deity Root: {star_name_gen.deity}\n'
+            f'Region: {kwargs["region"].title()}\n'
+        )
+    )
 
     for prospect in star_prospects:
         click.echo(prospect)
