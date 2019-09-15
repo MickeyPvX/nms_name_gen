@@ -2,6 +2,7 @@ import click
 
 from googletrans import Translator
 from utils.star_class_map import spectral_class_map, oddity_map
+from utils.translation_tools import engrish, engrishify
 from app.portmanfaux import PortManFaux
 from app.star_class import StarClass
 
@@ -23,8 +24,9 @@ def translate(word):
     :return:
     """
     trans = Translator()
-    icelandic = trans.translate(word, dest='is').text
-    click.echo(f'{word} -> {icelandic}')
+    icelandic = trans.translate(word, dest='is').text.lower()
+    display_word = engrishify(icelandic, engrish)
+    click.echo(f'{word} -> {display_word}')
 
     return
 
