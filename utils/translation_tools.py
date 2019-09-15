@@ -12,8 +12,12 @@ engrish = {
     'ö': 'eh'
 }
 
+vowels = 'aeiouy'
 
-def engrishify(word, replace_map):
+duplets = {'th', 'sh', 'ch', 'ph', 'rh'}
+
+
+def engrishify(word):
     """
     A simple function for replacing characters in a string based on a replacement map
 
@@ -22,7 +26,52 @@ def engrishify(word, replace_map):
     :return (str):
     """
     bytes_word = word.encode('utf-8')
-    for key, replace in replace_map.items():
+    for key, replace in engrish.items():
         bytes_word = bytes_word.replace(key.encode('utf-8'), replace.encode('utf-8'))
 
     return bytes_word.decode('utf-8')
+
+
+def check_chars(word, check_str):
+    """
+    Checks an input word's characters to see if they are in check_str
+
+    :param word (str): word to check
+    :param check_str (str): string to compare
+    :return (list[bool]):
+    """
+    return [char in check_str for char in word]
+
+
+def get_first_syl(word):
+    """
+    Horribly naive way to find the first syllable of any word
+
+    :param word (str): word to parse out the first syllable
+    :return (str):
+    """
+    vowel_check = check_chars(word, vowels)
+    for n in range(len(vowel_check)):
+        if vowel_check[n]:
+            if vowel_check[n + 1]:
+                continue
+            elif len(word) == n + 2:
+                return word
+            elif vowel_check[n + 2]:
+                return word[:n + 1]
+            elif word[n + 1:n + 3] in duplets:
+                if len(word) == n + 3:
+                    return word
+                elif vowel_check[n + 3]:
+                    return word[:n + 1]
+                else:
+                    return word[:n + 3]
+            else:
+                if len(word) == n + 3:
+                    return word
+                elif vowel_check[n + 3]:
+                    return word[:n + 2]
+                elif word[n + 2:n + 4] in duplets:
+                    return word[:n + 2]
+                else:
+                    return word[:n + 3]
