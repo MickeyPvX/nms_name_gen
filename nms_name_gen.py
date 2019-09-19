@@ -23,8 +23,8 @@ def translate(word):
     :param word (str): input word in English
     :return:
     """
-    trans = Translator()
-    icelandic = trans.translate(word, dest='is').text.lower()
+    trans = Translator(service_urls=['translate.google.com'])
+    icelandic = trans.translate(word, src='en', dest='is').text.lower()
     display_word = engrishify(icelandic)
     click.echo(f'{word} -> {display_word}')
 

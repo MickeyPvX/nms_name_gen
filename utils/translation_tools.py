@@ -14,7 +14,7 @@ engrish = {
 
 vowels = 'aeiouy'
 
-duplets = {'th', 'sh', 'ch', 'ph', 'rh'}
+duplets = {'th', 'sh', 'ch', 'ph', 'rh', 'sk'}
 
 
 def engrishify(word):
@@ -58,12 +58,12 @@ def get_first_syl(word):
             elif len(word) == n + 2:
                 return word
             elif vowel_check[n + 2]:
-                return word[:n + 1]
+                return word[:n + 2]
             elif word[n + 1:n + 3] in duplets:
                 if len(word) == n + 3:
                     return word
                 elif vowel_check[n + 3]:
-                    return word[:n + 1]
+                    return word[:n + 3]
                 else:
                     return word[:n + 3]
             else:
