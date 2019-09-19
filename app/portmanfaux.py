@@ -40,7 +40,7 @@ class PortManFaux(object):
                     self.faux_list.append(f'{w1[:-x]}{w2[y:]}')
                     self.faux_list.append(f'{w2[:-y]}{w1[x:]}')
 
-    def get_prospects(self, number=10, min_len=4):
+    def get_prospects(self, number=10, min_len=4, input_words=[]):
         """
         Selects n portman-faux words at random
 
@@ -48,6 +48,10 @@ class PortManFaux(object):
         :param min_len (int): minimum length of the words to select
         :return (set):
         """
+        if len(self.faux_list) == 0:
+            self.input_words = input_words
+            self._gen_faux()
+
         filtered_list = [prospect.title() for prospect in self.faux_list if len(prospect) >= min_len]
         num_possible = len(filtered_list)
 
