@@ -52,8 +52,8 @@ class PortManFaux(object):
             self.input_words = input_words
             self._gen_faux()
 
-        filtered_list = [prospect.title() for prospect in self.faux_list if len(prospect) >= min_len]
-        num_possible = len(filtered_list)
+        filtered_set = {prospect.title() for prospect in self.faux_list if len(prospect) >= min_len}
+        num_possible = len(filtered_set)
 
         if num_possible == 0:
             print(f'No words can be generated with a minimum length of {min_len}')
@@ -62,11 +62,11 @@ class PortManFaux(object):
             print(
                 f'Only {num_possible} of the {number} requested words can be generated with a minimum length of {min_len}'
             )
-            self.prospects = set(filtered_list)
+            self.prospects = filtered_set
         else:
             self.prospects.clear()
 
             while len(self.prospects) < number:
-                self.prospects.add(filtered_list[randint(0, len(filtered_list) - 1)])
+                self.prospects.add(filtered_set.pop())
 
         return self.prospects

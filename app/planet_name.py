@@ -1,10 +1,13 @@
 import json
+import uuid
+import requests
 
 from os.path import dirname
 from .models.type_validator import TypeValidator
+from .models.typed_list import TypedList
+from .models.azure_translator import AzureTranslator
 from .portmanfaux import PortManFaux
 from utils.translation_tools import engrishify, check_chars, get_first_syl
-from googletrans import Translator
 
 
 class PlanetName(object):
@@ -14,40 +17,43 @@ class PlanetName(object):
     sentinals = TypeValidator(str)
     flora = TypeValidator(str)
     fauna = TypeValidator(str)
+    generator = TypeValidator(PortManFaux)
+    filepath = TypeValidator(str)
+    suffix_attrs = TypedList(str)
+    suffix = TypeValidator(str)
+    prospects = TypeValidator(set)
 
     def __init__(self, **kwargs):
-        self.translator = Translator()
+        self.translator = AzureTranslator()
         self.generator = PortManFaux()
         self.filepath = f'{dirname(__file__)}\\translation_map.json'
         self.suffix_attrs = ['sentinals', 'flora', 'fauna']
-        self.suffix = None
+        self.suffix = ''
         self.__dict__.update(kwargs)
 
         with open(self.filepath, 'r+') as mapfile:
             self.translation_map = json.load(mapfile)
 
-    def _translate(self, word, language='is'):
-        translation = self.translator.translate(word, src='en', dest=language).text.lower()
+    def _map_or_translate(self, word_list: list, singleton=False):
+        if not isinstance(word_list, list):
+            raise TypeError(f'"{word_list}" is not a list of strings')
 
-        if translation == word.lower():
-            raise ValueError(f'The translation service could not understand {word}')
-
-        return engrishify(translation)
-
-    def _map_or_translate(self, word_list: list):
         word_list = [word.lower() for word in word_list]
         new_map = {
-            word: get_first_syl(self._translate(word))
+            word: get_first_syl(self.translator.translate(word))
             for word in word_list
             if self.translation_map.get(word) is None
         }
-        self.translation_map.update(new_map)
 
         if new_map:
+            self.translation_map.update(new_map)
             with open(self.filepath, 'w') as mapfile:
                 json.dump(self.translation_map, mapfile)
 
-        return [self.translation_map[word] for word in word_list]
+        if singleton:
+            return self.translation_map[word_list[0]]
+        else:
+            return [self.translation_map[word] for word in word_list]
 
     def _check_suffix_attrs(self):
         if any([self.__dict__.get(attr) is None for attr in self.suffix_attrs]):
@@ -71,8 +77,23 @@ class PlanetName(object):
         self.suffix = f'{suffix_dict["sentinals"].title()}{suffix_dict["flora"]}{suffix_dict["fauna"]}'
 
     def generate_names(self, number=10, min_len=4):
-        if self.suffix is None:
+        if self.suffix == '':
             self._check_suffix_attrs()
             self.gen_suffix()
 
-        print(self.suffix)
+        if self.star_name is None or self.weather is None:
+            raise AttributeError('Star name and planet weather are required')
+
+        print(self.star_name, self.weather)
+        weather_trans = self._map_or_translate([self.weather], singleton=True)
+
+        self.prospects = {
+            f'{prospect}-{self.suffix}'
+            for prospect in self.generator.get_prospects(
+                number=number,
+                min_len=min_len,
+                input_words=[self.star_name, weather_trans]
+            )
+        }
+
+        return self.prospects
