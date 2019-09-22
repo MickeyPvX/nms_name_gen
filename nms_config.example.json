@@ -1,0 +1,12 @@
+{
+    "global_properties": {
+        "translator": "REPLACEME",
+        "generator": "REPLACEME"
+    },
+    "translators": {
+        "azure": {
+            "translate_url": "REPLACEME",
+            "translate_key": "REPLACEME"
+        }
+    }
+}

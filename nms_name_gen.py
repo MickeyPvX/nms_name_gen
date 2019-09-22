@@ -1,9 +1,13 @@
 import click
 
-from googletrans import Translator
-from utils.star_class_map import spectral_class_map, oddity_map
-from app.portmanfaux import PortManFaux
-from app.models.star_class import StarClass
+from app.star_class import StarClass
+from app.planet_name import PlanetName
+from config import NMSConfig
+from app.models.pmf_gen import PortManFaux
+
+config = NMSConfig()
+DEFAULT_NUMBER = 10
+DEFAULT_MIN_LEN = 4
 
 
 @click.group()
@@ -22,8 +26,8 @@ def translate(word):
     :param word (str): input word in English
     :return:
     """
-    trans = Translator()
-    icelandic = trans.translate(word, dest='is').text
+    icelandic = config.translator.translate(word, to_lang='is')
+
     click.echo(f'{word} -> {icelandic}')
 
     return
@@ -32,25 +36,23 @@ def translate(word):
 @click.command()
 @click.option('--min-len', '-m', help='Minimum length of words to generate', type=int)
 @click.option('--number', '-n', help='Number of words to generate', type=int)
-@click.argument('input_words')
-def portmanfaux(**kwargs):
+@click.argument('word_1')
+@click.argument('word_2')
+def portmanfaux(word_1, word_2, **kwargs):
     """
     Generates a list of portman-faux words from input words and outputs them to the console
 
     :param min_len (int): minimum length of the words to return
     :param number (int): number of words to generate
-    :param input_words (str): words to use separated by commas
+    :param word_1 (str): first word to blend
+    :param word_2 (str): second word to blend
     :return:
     """
-    word_list = kwargs.pop('input_words').split(',')
+    word_list = [word_1, word_2]
 
     click.echo(f'Words used: {word_list}')
 
-    prospect_args = {
-        key: value
-        for key, value in kwargs.items()
-        if value is not None
-    }
+    prospect_args = {key: value for key, value in kwargs.items() if value is not None}
 
     word_gen = PortManFaux(input_words=word_list)
     prospects = word_gen.get_prospects(**prospect_args)
@@ -82,9 +84,49 @@ def name_star(**kwargs):
     star_name_gen = StarClass(spectral_class)
     star_prospects = star_name_gen.generate_names(**name_args)
 
-    click.echo(f'Star Class: {star_name_gen.spectral_class_str}\nRegion: {kwargs["region"].title()}\n')
+    click.echo(
+        (
+            f'\nStar Class: {star_name_gen.spectral_class_str}\n'
+            f'Deity Root: {star_name_gen.deity}\n'
+            f'Region: {kwargs["region"].title()}\n'
+        )
+    )
 
     for prospect in star_prospects:
+        click.echo(prospect)
+
+    return
+
+
+@click.command()
+@click.option('--min-len', '-m', help='Minimum length of names to generate', type=int)
+@click.option('--number', '-n', help='Number of names to generate', type=int)
+@click.option('--extreme', '-x', is_flag=True)
+@click.option('--star_name', '-sn', prompt=True)
+@click.option('--weather', '-w', prompt=True)
+@click.option('--sentinals', '-sl', prompt=True)
+@click.option('--flora', '-fl', prompt=True)
+@click.option('--fauna', '-fa', prompt=True)
+def name_planet(**kwargs):
+    """
+    Based on the name of the star of the planet's solar system, the planet's weather, flora, and fauna,
+    generates prospective planet names and outputs them to the console.
+
+    :param star_name (str): name of the star of the planet's solar system
+    :param weather (str): the planet's weather; if two words, use one of them
+    :param sentinals (str): the planet's sentinal behavior
+    :param flora (str): the planet's flora density
+    :param fauna (str): the planet's fauna density
+    :return:
+    """
+    name_args = {
+        key: kwargs.pop(key) for key in ['min_len', 'number', 'extreme'] if kwargs.get(key) is not None
+    }
+
+    namer = PlanetName(**kwargs)
+    planet_prospects = namer.generate_names(**name_args)
+
+    for prospect in planet_prospects:
         click.echo(prospect)
 
     return
@@ -94,4 +136,5 @@ def entrypoint():
     main.add_command(translate)
     main.add_command(portmanfaux)
     main.add_command(name_star)
+    main.add_command(name_planet)
     main()

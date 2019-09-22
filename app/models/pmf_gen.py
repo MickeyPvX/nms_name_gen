@@ -1,9 +1,9 @@
-from .models.type_validator import TypeValidator
-from .models.typed_list import TypedList
-from random import randint
+from .type_validator import TypeValidator
+from .typed_list import TypedList
+from .nms_generator import NMSGenerator
 
 
-class PortManFaux(object):
+class PortManFaux(NMSGenerator):
     """
     As opposed to a true portmanteau where the sound and meaning of two words are blended, this
     portman-faux programmatically generates combinations of two inputs with no real logic as to
@@ -40,7 +40,7 @@ class PortManFaux(object):
                     self.faux_list.append(f'{w1[:-x]}{w2[y:]}')
                     self.faux_list.append(f'{w2[:-y]}{w1[x:]}')
 
-    def get_prospects(self, number=10, min_len=4):
+    def get_prospects(self, number=10, min_len=4, input_words=[]):
         """
         Selects n portman-faux words at random
 
@@ -48,8 +48,12 @@ class PortManFaux(object):
         :param min_len (int): minimum length of the words to select
         :return (set):
         """
-        filtered_list = [prospect.title() for prospect in self.faux_list if len(prospect) >= min_len]
-        num_possible = len(filtered_list)
+        if len(self.faux_list) == 0:
+            self.input_words = input_words
+            self._gen_faux()
+
+        filtered_set = {prospect.title() for prospect in self.faux_list if len(prospect) >= min_len}
+        num_possible = len(filtered_set)
 
         if num_possible == 0:
             print(f'No words can be generated with a minimum length of {min_len}')
@@ -58,11 +62,11 @@ class PortManFaux(object):
             print(
                 f'Only {num_possible} of the {number} requested words can be generated with a minimum length of {min_len}'
             )
-            self.prospects = set(filtered_list)
+            self.prospects = filtered_set
         else:
             self.prospects.clear()
 
             while len(self.prospects) < number:
-                self.prospects.add(filtered_list[randint(0, len(filtered_list) - 1)])
+                self.prospects.add(filtered_set.pop())
 
         return self.prospects

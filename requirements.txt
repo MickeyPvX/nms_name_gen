@@ -1,2 +1,2 @@
 click==7.0
-googletrans==2.4.0
+requests==2.22.0
