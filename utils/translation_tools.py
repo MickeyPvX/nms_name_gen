@@ -14,7 +14,7 @@ engrish = {
 
 vowels = 'aeiouy'
 
-duplets = {'th', 'sh', 'ch', 'ph', 'rh', 'sk'}
+duplets = {'th', 'sh', 'ch', 'ph', 'rh', 'sk', 'll'}
 
 
 def engrishify(word):

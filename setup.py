@@ -5,7 +5,7 @@ with open('requirements.txt', 'r') as req_file:
 
 setup(
     name='nms_name_gen',
-    version='0.1.0',
+    version='1.0.0',
     py_modules=['nms_name_gen'],
     install_requires=reqs,
     entry_points='''

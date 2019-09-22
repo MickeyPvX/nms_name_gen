@@ -3,8 +3,7 @@ import json
 from .typed_list import TypedList
 from .type_validator import TypeValidator
 from requests import Session, Request
-from config import NMSConfig
-from .translator import NMSTranslator
+from .nms_translator import NMSTranslator
 from utils.translation_tools import engrishify
 
 
@@ -15,8 +14,8 @@ class AzureTranslator(NMSTranslator):
     response = TypedList(dict)
     translation = TypeValidator(dict)
 
-    def __init__(self):
-        self.config = NMSConfig()
+    def __init__(self, config):
+        self.config = config
         self.headers = {
             'Ocp-Apim-Subscription-Key': self.config['translate_key'],
             'Content-Type': 'application/json',

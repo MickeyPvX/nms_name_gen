@@ -1,9 +1,9 @@
-from .models.type_validator import TypeValidator
-from .models.typed_list import TypedList
-from random import randint
+from .type_validator import TypeValidator
+from .typed_list import TypedList
+from .nms_generator import NMSGenerator
 
 
-class PortManFaux(object):
+class PortManFaux(NMSGenerator):
     """
     As opposed to a true portmanteau where the sound and meaning of two words are blended, this
     portman-faux programmatically generates combinations of two inputs with no real logic as to
