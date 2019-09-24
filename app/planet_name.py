@@ -44,7 +44,7 @@ class PlanetName(object):
         if new_map:
             self.translation_map.update(new_map)
             with open(self.filepath, 'w') as mapfile:
-                json.dump(self.translation_map, mapfile)
+                json.dump(self.translation_map, mapfile, sort_keys=True, indent=4, separators=(',', ': '))
 
         if singleton:
             return self.translation_map[word_list[0]]
