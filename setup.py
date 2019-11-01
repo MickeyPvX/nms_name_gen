@@ -10,6 +10,6 @@ setup(
     install_requires=reqs,
     entry_points='''
         [console_scripts]
-        nms_name_gen=nms_name_gen:entrypoint
+        nms_name_gen=nms_name_gen:main
     ''',
 )
