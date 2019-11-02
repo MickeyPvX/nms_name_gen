@@ -17,7 +17,7 @@ def main():
     """
 
 
-@click.command()
+@main.command()
 @click.argument('word')
 def translate(word):
     """
@@ -33,7 +33,7 @@ def translate(word):
     return
 
 
-@click.command()
+@main.command()
 @click.option('--min-len', '-m', help='Minimum length of words to generate', type=int)
 @click.option('--number', '-n', help='Number of words to generate', type=int)
 @click.argument('word_1')
@@ -63,7 +63,7 @@ def portmanfaux(word_1, word_2, **kwargs):
     return
 
 
-@click.command()
+@main.command()
 @click.option('--min-len', '-m', help='Minimum length of names to generate', type=int)
 @click.option('--number', '-n', help='Number of names to generate', type=int)
 @click.argument('spectral_class')
@@ -98,7 +98,7 @@ def name_star(**kwargs):
     return
 
 
-@click.command()
+@main.command()
 @click.option('--min-len', '-m', help='Minimum length of names to generate', type=int)
 @click.option('--number', '-n', help='Number of names to generate', type=int)
 @click.option('--extreme', '-x', is_flag=True)
@@ -130,11 +130,3 @@ def name_planet(**kwargs):
         click.echo(prospect)
 
     return
-
-
-def entrypoint():
-    main.add_command(translate)
-    main.add_command(portmanfaux)
-    main.add_command(name_star)
-    main.add_command(name_planet)
-    main()
