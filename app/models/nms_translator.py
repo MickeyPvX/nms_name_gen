@@ -1,4 +1,4 @@
 class NMSTranslator(object):
 
-    def translate(self):
+    def translate(self) -> str:
         raise NotImplementedError()

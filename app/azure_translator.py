@@ -1,9 +1,10 @@
 import json
 
-from .typed_list import TypedList
-from .type_validator import TypeValidator
+from .models.typed_list import TypedList
+from .models.type_validator import TypeValidator
+from .models.nms_translator import NMSTranslator
+
 from requests import Session, Request
-from .nms_translator import NMSTranslator
 from utils.translation_tools import engrishify
 
 

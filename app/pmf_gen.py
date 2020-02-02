@@ -1,6 +1,6 @@
-from .type_validator import TypeValidator
-from .typed_list import TypedList
-from .nms_generator import NMSGenerator
+from .models.type_validator import TypeValidator
+from .models.typed_list import TypedList
+from .models.nms_generator import NMSGenerator
 
 
 class PortManFaux(NMSGenerator):
@@ -16,14 +16,6 @@ class PortManFaux(NMSGenerator):
     prospects = TypeValidator(set)
     faux_list = TypedList(str)
 
-    def __init__(self, input_words=[]):
-        self.input_words = input_words
-        self.prospects = set()
-        self.faux_list = []
-
-        if len(input_words) > 0:
-            self._gen_faux()
-
     def _gen_faux(self):
         """
         Generates all possible word combinations
@@ -32,13 +24,10 @@ class PortManFaux(NMSGenerator):
             # Currently only working on 2 words at a time
             raise ValueError(f'input_words: {self.input_words} is not a list with len() == 2')
         else:
-            w1 = self.input_words[0]
-            w2 = self.input_words[1]
-
-            for x in range(1, len(w1)):
-                for y in range(1, len(w2)):
-                    self.faux_list.append(f'{w1[:-x]}{w2[y:]}')
-                    self.faux_list.append(f'{w2[:-y]}{w1[x:]}')
+            for x in range(1, len(self.input_words[0])):
+                for y in range(1, len(self.input_words[1])):
+                    yield f'{self.input_words[0][:-x]}{self.input_words[1][y:]}'
+                    yield f'{self.input_words[1][:-y]}{self.input_words[0][x:]}'
 
     def get_prospects(self, number=10, min_len=4, input_words=[]):
         """
@@ -46,13 +35,12 @@ class PortManFaux(NMSGenerator):
 
         :param number (int): number of words to select
         :param min_len (int): minimum length of the words to select
-        :return (set):
+        :return (generator):
         """
-        if len(self.faux_list) == 0:
-            self.input_words = input_words
-            self._gen_faux()
+        self.input_words = input_words
+        prospects = set()
 
-        filtered_set = {prospect.title() for prospect in self.faux_list if len(prospect) >= min_len}
+        filtered_set = {prospect.title() for prospect in self._gen_faux() if len(prospect) >= min_len}
         num_possible = len(filtered_set)
 
         if num_possible == 0:
@@ -62,11 +50,9 @@ class PortManFaux(NMSGenerator):
             print(
                 f'Only {num_possible} of the {number} requested words can be generated with a minimum length of {min_len}'
             )
-            self.prospects = filtered_set
+            prospects = filtered_set
         else:
-            self.prospects.clear()
+            while len(prospects) < number:
+                prospects.add(filtered_set.pop())
 
-            while len(self.prospects) < number:
-                self.prospects.add(filtered_set.pop())
-
-        return self.prospects
+        return prospects

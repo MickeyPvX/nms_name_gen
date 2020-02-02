@@ -3,8 +3,8 @@ import json
 from app.models.type_validator import TypeValidator
 from app.models.nms_translator import NMSTranslator
 from app.models.nms_generator import NMSGenerator
-from app.models.azure_translator import AzureTranslator
-from app.models.pmf_gen import PortManFaux
+from app.azure_translator import AzureTranslator
+from app.pmf_gen import PortManFaux
 
 config_map = {
     'translators': {
