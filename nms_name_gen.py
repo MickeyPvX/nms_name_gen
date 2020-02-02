@@ -1,13 +1,17 @@
 import click
+import json
+
+from os import path
 
 from app.star_class import StarClass
 from app.planet_name import PlanetName
+from app.pmf_gen import PortManFaux
 from config import NMSConfig
-from app.models.pmf_gen import PortManFaux
+from utils.translation_tools import map_or_translate
 
 config = NMSConfig()
-DEFAULT_NUMBER = 10
-DEFAULT_MIN_LEN = 4
+translation_map = json.load(open(f"{path.dirname(__file__)}\\app\\translation_map.json"))
+sort_map = {'ASC': False, 'DESC': True}
 
 
 @click.group()
@@ -18,17 +22,26 @@ def main():
 
 
 @main.command()
-@click.argument('word')
-def translate(word):
+@click.option(
+    "-w", "--words",
+    type=click.STRING,
+    multiple=True
+)
+def translate(words):
     """
     This command translates an English input word to Icelandic and outputs it to the console
 
     :param word (str): input word in English
     :return:
     """
-    icelandic = config.translator.translate(word, to_lang='is')
+    translation = map_or_translate(
+        words,
+        translation_map,
+        config.translator
+    )
 
-    click.echo(f'{word} -> {icelandic}')
+    for word, icelandic in translation.items():
+        click.echo(f'{word} -> {icelandic}')
 
     return
 
@@ -64,8 +77,9 @@ def portmanfaux(word_1, word_2, **kwargs):
 
 
 @main.command()
-@click.option('--min-len', '-m', help='Minimum length of names to generate', type=int)
-@click.option('--number', '-n', help='Number of names to generate', type=int)
+@click.option('--min-len', '-m', help='Minimum length of names to generate', type=click.INT)
+@click.option('--number', '-n', help='Number of names to generate', type=click.INT)
+@click.option('--sort', '-s', type=click.Choice(['ASC', 'DESC']))
 @click.argument('spectral_class')
 @click.argument('region')
 def name_star(**kwargs):
@@ -79,6 +93,8 @@ def name_star(**kwargs):
     :return:
     """
     spectral_class = kwargs.pop('spectral_class')
+    sort_dir = kwargs.pop('sort', False)
+
     name_args = {key: value for key, value in kwargs.items() if value is not None}
 
     star_name_gen = StarClass(spectral_class)
@@ -92,7 +108,7 @@ def name_star(**kwargs):
         )
     )
 
-    for prospect in star_prospects:
+    for prospect in sorted(star_prospects, reverse=sort_map.get(sort_dir, False)):
         click.echo(prospect)
 
     return
@@ -101,6 +117,7 @@ def name_star(**kwargs):
 @main.command()
 @click.option('--min-len', '-m', help='Minimum length of names to generate', type=int)
 @click.option('--number', '-n', help='Number of names to generate', type=int)
+@click.option('--sort', '-s', type=click.Choice(['ASC', 'DESC']))
 @click.option('--extreme', '-x', is_flag=True)
 @click.option('--star_name', '-sn', prompt=True)
 @click.option('--weather', '-w', prompt=True)
@@ -119,6 +136,7 @@ def name_planet(**kwargs):
     :param fauna (str): the planet's fauna density
     :return:
     """
+    sort_dir = kwargs.pop('sort', False)
     name_args = {
         key: kwargs.pop(key) for key in ['min_len', 'number', 'extreme'] if kwargs.get(key) is not None
     }
@@ -126,7 +144,7 @@ def name_planet(**kwargs):
     namer = PlanetName(**kwargs)
     planet_prospects = namer.generate_names(**name_args)
 
-    for prospect in planet_prospects:
+    for prospect in sorted(planet_prospects, reverse=sort_map.get(sort_dir, False)):
         click.echo(prospect)
 
     return

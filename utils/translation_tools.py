@@ -1,3 +1,5 @@
+from app.models.nms_translator import NMSTranslator
+
 # This map associates Icelandic letters with their English pronunciations
 engrish = {
     'á': 'ow',
@@ -75,3 +77,18 @@ def get_first_syl(word):
                     return word[:n + 2]
                 else:
                     return word[:n + 3]
+
+
+def map_or_translate(words, translation_map: dict, translator: NMSTranslator):
+    """
+    :return (dict): {<word>: <translation>}
+    """
+    if isinstance(words, str):
+        words = {words}
+
+    words = {word.lower() for word in words}
+
+    return {
+        word: translation_map.get(word, translator.translate(word))
+        for word in words
+    }
