@@ -37,8 +37,6 @@ class StarClass(object):
         prefix = f'{oddity_map[self.oddities[0]]}-' if len(self.oddities) == 2 else ''
         suffix = f'-{oddity_map[self.oddities[-1]]}' if len(self.oddities) >= 1 else ''
 
-        print(self.deity, region)
-
         return {
             f'{prefix}{name}{suffix}'
             for name in self.config.generator.get_prospects(

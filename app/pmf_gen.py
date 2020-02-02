@@ -13,8 +13,6 @@ class PortManFaux(NMSGenerator):
     """
 
     input_words = TypedList(str)
-    prospects = TypeValidator(set)
-    faux_list = TypedList(str)
 
     def _gen_faux(self):
         """
