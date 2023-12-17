@@ -53,7 +53,7 @@ def get_first_syl(word):
     :return (str):
     """
     vowel_check = check_chars(word, vowels)
-    for n in range(len(vowel_check)):
+    for n, _ in enumerate(vowel_check):
         if vowel_check[n]:
             if vowel_check[n + 1]:
                 continue

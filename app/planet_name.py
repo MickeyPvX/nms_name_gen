@@ -1,6 +1,6 @@
 import json
 
-from os.path import dirname
+from os import path
 from .models.type_validator import TypeValidator
 from .models.typed_list import TypedList
 from config import NMSConfig
@@ -22,7 +22,7 @@ class PlanetName(object):
 
     def __init__(self, **kwargs):
         self.config = NMSConfig()
-        self.filepath = f'{dirname(__file__)}\\translation_map.json'
+        self.filepath = path.join(f"{path.dirname(__file__)}", "translation_map.json")
         self.suffix_attrs = ['sentinals', 'flora', 'fauna']
         self.suffix = ''
         self.__dict__.update(kwargs)

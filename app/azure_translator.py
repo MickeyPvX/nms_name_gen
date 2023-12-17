@@ -1,11 +1,9 @@
-import json
+from requests import Session, Request
+from utils.translation_tools import engrishify
 
 from .models.typed_list import TypedList
 from .models.type_validator import TypeValidator
 from .models.nms_translator import NMSTranslator
-
-from requests import Session, Request
-from utils.translation_tools import engrishify
 
 
 class AzureTranslator(NMSTranslator):
