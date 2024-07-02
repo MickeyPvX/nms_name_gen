@@ -10,7 +10,9 @@ from config import NMSConfig
 from utils.translation_tools import map_or_translate
 
 config = NMSConfig()
-translation_map = json.load(open(path.join(f"{path.dirname(__file__)}", "app", "translation_map.json")))
+translation_map = json.load(
+    open(path.join(f"{path.dirname(__file__)}", "app", "translation_map.json"))
+)
 sort_map = {'ASC': False, 'DESC': True}
 
 
