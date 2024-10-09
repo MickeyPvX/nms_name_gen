@@ -1,6 +1,7 @@
-from .models.type_validator import TypeValidator
-from .models.typed_list import TypedList
-from .models.nms_generator import NMSGenerator
+"""Portmanfaux generator class"""
+
+from models.nms_generator import NMSGenerator
+from models.typed_list import TypedList
 
 
 class PortManFaux(NMSGenerator):
@@ -20,12 +21,12 @@ class PortManFaux(NMSGenerator):
         """
         if len(self.input_words) != 2:
             # Currently only working on 2 words at a time
-            raise ValueError(f'input_words: {self.input_words} is not a list with len() == 2')
+            raise ValueError(f"input_words: {self.input_words} is not a list with len() == 2")
         else:
             for x in range(1, len(self.input_words[0])):
                 for y in range(1, len(self.input_words[1])):
-                    yield f'{self.input_words[0][:-x]}{self.input_words[1][y:]}'
-                    yield f'{self.input_words[1][:-y]}{self.input_words[0][x:]}'
+                    yield f"{self.input_words[0][:-x]}{self.input_words[1][y:]}"
+                    yield f"{self.input_words[1][:-y]}{self.input_words[0][x:]}"
 
     def get_prospects(self, number=10, min_len=4, input_words=[]):
         """
@@ -42,11 +43,12 @@ class PortManFaux(NMSGenerator):
         num_possible = len(filtered_set)
 
         if num_possible == 0:
-            print(f'No words can be generated with a minimum length of {min_len}')
+            print(f"No words can be generated with a minimum length of {min_len}")
             return
         elif num_possible < number:
             print(
-                f'Only {num_possible} of the {number} requested words can be generated with a minimum length of {min_len}'
+                f"Only {num_possible} of the {number} requested words "
+                "can be generated with a minimum length of {min_len}"
             )
             prospects = filtered_set
         else:

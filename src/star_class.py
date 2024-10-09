@@ -1,10 +1,13 @@
-from .models.type_validator import TypeValidator
-from .models.typed_list import TypedList
-from utils.star_class_map import spectral_class_map, oddity_map
+"""StarClass module"""
+
 from config import NMSConfig
+from models.type_validator import TypeValidator
+from models.typed_list import TypedList
+from utils.star_class_map import oddity_map, spectral_class_map
 
 
 class StarClass(object):
+    """Holds data related to the class of star to be named"""
 
     config = TypeValidator(dict)
     spectral_class_str = TypeValidator(str)
@@ -19,9 +22,9 @@ class StarClass(object):
         self.oddities = []
 
         if 2 > len(self.spectral_class_str) > 4:
-            raise ValueError('Spectral class input must be between 2 and 4 characters')
+            raise ValueError("Spectral class input must be between 2 and 4 characters")
         elif self.spectral_class not in spectral_class_map:
-            raise ValueError(f'Spectral class {self.spectral_class_str[0].upper()} does not exist')
+            raise ValueError(f"Spectral class {self.spectral_class_str[0].upper()} does not exist")
 
         self.brightness_index = int(self.spectral_class_str[1]) // 2
         self.deity = spectral_class_map[self.spectral_class][self.brightness_index]
@@ -34,14 +37,13 @@ class StarClass(object):
                     self.oddities.append(char.upper())
 
     def generate_names(self, region, number=10, min_len=4):
-        prefix = f'{oddity_map[self.oddities[0]]}-' if len(self.oddities) == 2 else ''
-        suffix = f'-{oddity_map[self.oddities[-1]]}' if len(self.oddities) >= 1 else ''
+        """Generates potential Star full names based on Star characteristics"""
+        prefix = f"{oddity_map[self.oddities[0]]}-" if len(self.oddities) == 2 else ""
+        suffix = f"-{oddity_map[self.oddities[-1]]}" if len(self.oddities) >= 1 else ""
 
         return {
-            f'{prefix}{name}{suffix}'
+            f"{prefix}{name}{suffix}"
             for name in self.config.generator.get_prospects(
-                input_words=[self.deity, region],
-                number=number,
-                min_len=min_len
+                input_words=[self.deity, region], number=number, min_len=min_len
             )
         }

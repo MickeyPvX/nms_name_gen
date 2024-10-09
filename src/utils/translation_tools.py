@@ -1,25 +1,16 @@
-from app.models.nms_translator import NMSTranslator
+from typing import Dict, Iterable, List, Union
+
+from models.nms_translator import NMSTranslator
 
 # This map associates Icelandic letters with their English pronunciations
-engrish = {
-    'á': 'ow',
-    'ð': 'th',
-    'é': 'ea',
-    'í': 'e',
-    'ó': 'oh',
-    'ú': 'ou',
-    'ý': 'ee',
-    'þ': 'th',
-    'æ': 'ae',
-    'ö': 'eh'
-}
+engrish = {"á": "ow", "ð": "th", "é": "ea", "í": "e", "ó": "oh", "ú": "ou", "ý": "ee", "þ": "th", "æ": "ae", "ö": "eh"}
 
-vowels = 'aeiouy'
+vowels = "aeiouy"
 
-duplets = {'th', 'sh', 'ch', 'ph', 'rh', 'sk', 'll'}
+duplets = {"th", "sh", "ch", "ph", "rh", "sk", "ll"}
 
 
-def engrishify(word):
+def engrishify(word: str) -> str:
     """
     A simple function for replacing characters in a string based on a replacement map
 
@@ -27,14 +18,14 @@ def engrishify(word):
     :param replace_map (dict): dictionary of characters and their replacements
     :return (str):
     """
-    bytes_word = word.encode('utf-8')
+    bytes_word = word.encode("utf-8")
     for key, replace in engrish.items():
-        bytes_word = bytes_word.replace(key.encode('utf-8'), replace.encode('utf-8'))
+        bytes_word = bytes_word.replace(key.encode("utf-8"), replace.encode("utf-8"))
 
-    return bytes_word.decode('utf-8')
+    return bytes_word.decode("utf-8")
 
 
-def check_chars(word, check_str):
+def check_chars(word: str, check_str: str) -> List[bool]:
     """
     Checks an input word's characters to see if they are in check_str
 
@@ -45,7 +36,7 @@ def check_chars(word, check_str):
     return [char in check_str for char in word]
 
 
-def get_first_syl(word):
+def get_first_syl(word: str) -> str:
     """
     Horribly naive way to find the first syllable of any word
 
@@ -60,26 +51,28 @@ def get_first_syl(word):
             elif len(word) == n + 2:
                 return word
             elif vowel_check[n + 2]:
-                return word[:n + 2]
-            elif word[n + 1:n + 3] in duplets:
+                return word[: n + 2]
+            elif word[n + 1 : n + 3] in duplets:
                 if len(word) == n + 3:
                     return word
                 elif vowel_check[n + 3]:
-                    return word[:n + 3]
+                    return word[: n + 3]
                 else:
-                    return word[:n + 3]
+                    return word[: n + 3]
             else:
                 if len(word) == n + 3:
                     return word
                 elif vowel_check[n + 3]:
-                    return word[:n + 2]
-                elif word[n + 2:n + 4] in duplets:
-                    return word[:n + 2]
+                    return word[: n + 2]
+                elif word[n + 2 : n + 4] in duplets:
+                    return word[: n + 2]
                 else:
-                    return word[:n + 3]
+                    return word[: n + 3]
 
 
-def map_or_translate(words, translation_map: dict, translator: NMSTranslator):
+def map_or_translate(
+    words: Union[Iterable[str], str], translation_map: Dict[str, str], translator: NMSTranslator
+) -> Dict[str, str]:
     """
     :return (dict): {<word>: <translation>}
     """
@@ -88,7 +81,4 @@ def map_or_translate(words, translation_map: dict, translator: NMSTranslator):
 
     words = {word.lower() for word in words}
 
-    return {
-        word: translation_map.get(word, translator.translate(word))
-        for word in words
-    }
+    return {word: translation_map.get(word, translator.translate(word)) for word in words}

@@ -1,5 +1,9 @@
 # No Man's Sky Name Generator
 
+| Interrogate |
+| :---------: |
+| [![Interrogate Coverage](Interrogate)(./.github/badges/interrogate_badge.svg)] |
+
 ## Overview
 
 * This naming generator for No Man's Sky adhere's to Odin's naming convention for stars and planets:
@@ -13,9 +17,9 @@
 
 ## Installation
 
-nms_name_gen uses the Click package with setuptools integration to generate a command line interface:
+nms_name_gen uses the Click package with poetry integration to generate a command line interface:
 
-* [Click with setuptools](https://click.palletsprojects.com/en/7.x/setuptools/)
+* [Poetry](https://python-poetry.org/docs/)
 
 ## Setup
 
