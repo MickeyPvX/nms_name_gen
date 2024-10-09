@@ -1,6 +1,6 @@
 # No Man's Sky Name Generator
 
-| ![Python Version](https://img.shields.io/badge/Python-3.12-blue) | ![Interrogate Coverage](./.github/badges/interrogate_badge.svg) |
+![Python Version](https://img.shields.io/badge/Python-3.12-blue) ![Interrogate Coverage](./.github/badges/interrogate_badge.svg)
 
 ## Overview
 
