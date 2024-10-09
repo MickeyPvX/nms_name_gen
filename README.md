@@ -2,7 +2,7 @@
 
 | Interrogate |
 | :---------: |
-| [![Interrogate Coverage](Interrogate)(./.github/badges/interrogate_badge.svg)] |
+| [![Interrogate Coverage](./.github/badges/interrogate_badge.svg)] |
 
 ## Overview
 
