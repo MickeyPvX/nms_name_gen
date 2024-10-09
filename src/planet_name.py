@@ -29,7 +29,7 @@ class PlanetName(BaseModel):
         if self.filepath is None:
             self.filepath = path.join(f"{path.dirname(__file__)}", "translation_map.json")
         with open(file=self.filepath, mode="r+", encoding="utf-8") as mapfile:
-            self.translation_map = json.load(mapfile)
+            return json.load(mapfile)
 
     def _update_translations(self, update_map):
         """If a new translation happened, update the translation map file for persistence"""
