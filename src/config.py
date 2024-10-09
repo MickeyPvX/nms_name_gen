@@ -3,34 +3,38 @@
 import json
 import os
 from pathlib import Path
+from typing import Dict, Optional, Union
+
+from pydantic import BaseModel
 
 from azure_translator import AzureTranslator
 from models.nms_generator import NMSGenerator
 from models.nms_translator import NMSTranslator
-from models.type_validator import TypeValidator
 from pmf_gen import PortManFaux
 
-config_map = {"translators": {"azure": AzureTranslator}, "generators": {"portmanfaux": PortManFaux}}
+CONFIG_MAP = dict(translators=dict(azure=AzureTranslator), generators=dict(portmanfaux=PortManFaux))
 
 
-class NMSConfig(dict):
+class NMSConfig(BaseModel):
     """NMS Name generator config parser"""
 
-    global_properties = TypeValidator(dict)
-    translator_config = TypeValidator(dict)
-    translator = TypeValidator(NMSTranslator)
-    generator = TypeValidator(NMSGenerator)
+    config_path: Optional[str]
+    generator: NMSGenerator
+    global_properties: Dict[str, Dict[str, Union[str, Dict[str, str]]]]
+    translator: NMSTranslator
+    translator_config: Dict[str, str]
 
-    def __init__(self, config_path=None):
-        if config_path is None:
+    def __post_init__(self):
+        if self.config_path is None:
             base_path = Path(__file__).parent.resolve()
             config_path = os.path.join(base_path, "nms_config.json")
 
         with open(file=config_path, encoding="utf-8") as config_file:
             updater = {key.lower(): val for key, val in json.load(config_file).items()}
-            super().__init__(**updater)
 
         self.global_properties = updater["global_properties"]
         self.translator_config = updater["translators"][self.global_properties["translator"]]
-        self.translator = config_map["translators"].get(self.global_properties["translator"])(self.translator_config)
-        self.generator = config_map["generators"].get(self.global_properties["generator"])()
+        self.translator = CONFIG_MAP["translators"].get(self.global_properties["translator"])(
+            config=self.translator_config
+        )
+        self.generator = CONFIG_MAP["generators"].get(self.global_properties["generator"])()

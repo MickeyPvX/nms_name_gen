@@ -1,4 +1,6 @@
-spectral_class_map = {
+"""Constants for naming entities"""
+
+SPECTRAL_CLASS_MAP = {
     "O": ["Horus", "Vishnu", "Hera", "Lir", "Njord"],
     "B": ["Hathor", "Shiva", "Athena", "Boann", "Frigg"],
     "A": ["Ptah", "Saraswati", "Apollo", "Epona", "Heimdall"],
@@ -12,7 +14,7 @@ spectral_class_map = {
     "E": ["Isis", "Matangi", "Demeter", "Ce-aehd", "Sif"],
 }
 
-oddity_map = {
+ODDITY_MAP = {
     "E": "Ei",
     "F": "Ef",
     "H": "Ah",

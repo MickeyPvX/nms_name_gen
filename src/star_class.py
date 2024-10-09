@@ -3,7 +3,7 @@
 from config import NMSConfig
 from models.type_validator import TypeValidator
 from models.typed_list import TypedList
-from utils.star_class_map import oddity_map, spectral_class_map
+from utils.star_class_map import ODDITY_MAP, SPECTRAL_CLASS_MAP
 
 
 class StarClass(object):
@@ -23,23 +23,23 @@ class StarClass(object):
 
         if 2 > len(self.spectral_class_str) > 4:
             raise ValueError("Spectral class input must be between 2 and 4 characters")
-        elif self.spectral_class not in spectral_class_map:
+        elif self.spectral_class not in SPECTRAL_CLASS_MAP:
             raise ValueError(f"Spectral class {self.spectral_class_str[0].upper()} does not exist")
 
         self.brightness_index = int(self.spectral_class_str[1]) // 2
-        self.deity = spectral_class_map[self.spectral_class][self.brightness_index]
+        self.deity = SPECTRAL_CLASS_MAP[self.spectral_class][self.brightness_index]
 
         if len(self.spectral_class_str) > 2:
             for char in self.spectral_class_str[2:]:
-                if char.upper() not in oddity_map:
+                if char.upper() not in ODDITY_MAP:
                     print(f'"{char.upper()}" not a recognized oddity code; ignoring...')
                 elif char.upper() not in self.oddities:
                     self.oddities.append(char.upper())
 
     def generate_names(self, region, number=10, min_len=4):
         """Generates potential Star full names based on Star characteristics"""
-        prefix = f"{oddity_map[self.oddities[0]]}-" if len(self.oddities) == 2 else ""
-        suffix = f"-{oddity_map[self.oddities[-1]]}" if len(self.oddities) >= 1 else ""
+        prefix = f"{ODDITY_MAP[self.oddities[0]]}-" if len(self.oddities) == 2 else ""
+        suffix = f"-{ODDITY_MAP[self.oddities[-1]]}" if len(self.oddities) >= 1 else ""
 
         return {
             f"{prefix}{name}{suffix}"

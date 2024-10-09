@@ -1,7 +1,9 @@
 """NMSTranslator base model"""
 
+from pydantic import BaseModel
 
-class NMSTranslator(object):
+
+class NMSTranslator(BaseModel):
     """Base model for translators"""
 
     def translate(self, text: str, from_lang: str, to_lang: str) -> str:
