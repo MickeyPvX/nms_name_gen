@@ -3,7 +3,7 @@
     "generator": "REPLACEME",
     "translator": "REPLACEME"
   },
-  "translators": {
+  "translator_properties": {
     "azure": {
       "translate_key": "REPLACEME",
       "translate_url": "REPLACEME"

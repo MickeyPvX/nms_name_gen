@@ -2,6 +2,7 @@
 
 import json
 from os import path
+from pathlib import Path
 
 import click
 
@@ -13,10 +14,14 @@ from utils.translation_tools import map_or_translate
 
 SORT_MAP = {"ASC": False, "DESC": True}
 
-config = NMSConfig()
-translation_map = json.load(
-    open(file=path.join(f"{path.dirname(__file__)}", "app", "translation_map.json"), encoding="utf-8")
-)
+base_path = Path(__file__).parent.resolve()
+config_path = path.join(base_path, "nms_config.json")
+
+with open(file=config_path, encoding="utf-8") as config_file:
+    loaded_config = json.load(fp=config_file)
+
+config = NMSConfig(**loaded_config)
+translation_map = json.load(open(file=path.join(f"{path.dirname(__file__)}", "translation_map.json"), encoding="utf-8"))
 
 
 @click.group()
@@ -94,7 +99,7 @@ def name_star(**kwargs):
 
     name_args = {key: value for key, value in kwargs.items() if value is not None}
 
-    star_name_gen = StarClass(spectral_class)
+    star_name_gen = StarClass(config=config, spectral_class_str=spectral_class)
     star_prospects = star_name_gen.generate_names(**name_args)
 
     click.echo(
@@ -136,7 +141,7 @@ def name_planet(**kwargs):
     sort_dir = kwargs.pop("sort", False)
     name_args = {key: kwargs.pop(key) for key in ["min_len", "number", "extreme"] if kwargs.get(key) is not None}
 
-    namer = PlanetName(**kwargs)
+    namer = PlanetName(config=config, **kwargs)
     planet_prospects = namer.generate_names(**name_args)
 
     for prospect in sorted(planet_prospects, reverse=SORT_MAP.get(sort_dir, False)):
