@@ -27,13 +27,14 @@ class AzureTranslator(NMSTranslator):
             req = Request("POST", url=url, headers=headers, json=body)
             prepped = req.prepare()
 
-            response = session.send(prepped).json()
+            response = session.send(prepped)
+            response.raise_for_status()
 
         translation = {
             "from": from_lang,
             "to": to_lang,
             "input": text,
-            "translation": engrishify(response[0]["translations"][0]["text"].lower()),
+            "translation": engrishify(response.json()[0]["translations"][0]["text"].lower()),
         }
 
         return translation["translation"]
